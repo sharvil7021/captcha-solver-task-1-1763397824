@@ -1,0 +1,32 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8" />
+<title>Captcha Solver</title>
+<style>
+body { font-family: Arial; padding:20px; }
+img { max-width:300px; }
+</style>
+</head>
+<body>
+<h2>Captcha Solver Demo</h2>
+<img id="captcha" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAUAAAAFCAYAAACNbyblAAAAHElEQVQI12P4//8/w38GIAXDIBKE0DHxgljNBAAO9TXL0Y4OHwAAAABJRU5ErkJggg==">
+<button onclick="solve()">Solve</button>
+<pre id="out">...</pre>
+
+<script src="https://cdn.jsdelivr.net/npm/tesseract.js@2.1.5/dist/tesseract.min.js"></script>
+<script>
+async function solve() {
+  const out=document.getElementById("out");
+  out.textContent="Running...";
+  const worker = Tesseract.createWorker();
+  await worker.load();
+  await worker.loadLanguage("eng");
+  await worker.initialize("eng");
+  const x = await worker.recognize(document.getElementById("captcha"));
+  out.textContent = x.data.text.trim();
+  await worker.terminate();
+}
+</script>
+</body>
+</html>
